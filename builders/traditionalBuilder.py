@@ -49,7 +49,10 @@ class TraditionalBuilder(PdfBuilder):
 			if using_miktex() and not perl_installed():
 				default_command = DEFAULT_COMMAND_WINDOWS_MIKTEX_TEXIFY
 
-		self.cmd = self.builder_settings.get("command", default_command)
+		# Read the command option (platform specific)
+		self.cmd = self.builder_settings.get(sublime.platform(), {}).get("command", None)
+		if self.cmd is None:
+			self.cmd = self.builder_settings.get("command", default_command)
 		if isinstance(self.cmd, strbase):
 			self.cmd = shlex.split(self.cmd)
 
